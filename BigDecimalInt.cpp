@@ -222,11 +222,18 @@ bool BigDecimalInt::operator< (const BigDecimalInt& anotherDec)const{
         RHS.setSign('+');
         return (LHS>RHS);
     }
-    // if the first number has fewer digits than the second number that's mean it smaller than the second number it will be true
-    if(this->getSize() < anotherDec.getSize())
-        return true;
-    if(this->getSize() > anotherDec.getSize()) // ^^ vice versa ^^
-        return false;
+    
+    if(anotherDec.getSize() != this->getSize()){
+        int diff = abs( anotherDec.getSize() - this->getSize() );
+        for(long long i = 0; i < diff; i++){
+            if(anotherDec.getSize() > this->getSize()){
+                this->digits.push_front('0');
+            }
+            else{
+                anotherDec.digits.push_front('0');
+            }
+        }
+    }
     // if they are equal in digits number we will compare each digit from the left to the right
     for(long long i = 0; i < anotherDec.getSize(); i++){
         // if the second number's digit greater than the first number's digit return true
@@ -258,11 +265,17 @@ bool BigDecimalInt::operator> (const BigDecimalInt& anotherDec)const{
         RHS.setSign('+');
         return (LHS<RHS);
     }
-    // if the first number has fewer digits than the second number that's mean it smaller than the second number it will be false
-    if(this->getSize() < anotherDec.getSize())
-        return false;
-    if(this->getSize() > anotherDec.getSize()) // ^^ vice versa ^^
-        return true;
+    if(anotherDec.getSize() != this->getSize()){
+        int diff = abs( anotherDec.getSize() - this->getSize() );
+        for(long long i = 0; i < diff; i++){
+            if(anotherDec.getSize() > this->getSize()){
+                this->digits.push_front('0');
+            }
+            else{
+                anotherDec.digits.push_front('0');
+            }
+        }
+    }
     // if they are equal in digits number we will compare each digit from the left to the right
     for(long long i = 0; i < anotherDec.getSize(); i++){
         // if the second number's digit greater than the first number's digit return false
@@ -299,25 +312,20 @@ ostream& operator<<(ostream& out,const BigDecimalInt& bigint) {
 // ****************************** Validating number **************************************************
 void BigDecimalInt::validate(const string &num){
     bool valid = true;
-    bool leadingZero = true;
     // check if sign exist only once or not and check if the string contain numbers only using regex
     if (! regex_match(num, regex("(\\+|-)?\\d+") ) )
         valid = false;
         // push back the numbers into the object and skip zeros in the left
     else {
-        if(isdigit(num[0]) && num[0] != '0') {
+        if(isdigit(num[0])) {
             digits.push_back(num[0]);
-            leadingZero = false;
         }
         for (int i = 1; i <num.size() ; ++i) {
-            if(num[i] == '0' && leadingZero)
-                continue;
-            leadingZero = false;
             digits.push_back(num[i]);
         }
     }
     // if the string not valid set the object with deafult value zero
-    if(!valid || leadingZero) {
+    if(!valid) {
         digits.push_back('0');
         setSign('+');
     }
