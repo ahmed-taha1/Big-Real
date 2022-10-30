@@ -5,32 +5,41 @@
 #ifndef BIGREAL_BIGREAL_H
 #define BIGREAL_BIGREAL_H
 
-using namespace std;
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
+#include <iostream>
 #include "BigDecimalInt.h"
+using namespace std;
 
 class BigReal{
-    public:
-        BigReal (double realNumber = 0.0);
-        BigReal (string realNumber);
-        BigReal (BigDecimalInt bigInteger);
-        BigReal (const BigReal& other);
-        BigReal& operator= (BigReal& other);
-//        BigReal& operator= (BigReal&& other);
-//        BigReal operator+ (BigReal& other);
-//        BigReal operator- (BigReal& other);
-//        bool operator< (BigReal anotherReal);
-//        bool operator> (BigReal anotherReal);
-//        bool operator== (BigReal anotherReal);
-        int size();
-        char sign();
-        friend ostream& operator << (ostream& out, BigReal num);
-//        friend istream& operator >> (istream& out, BigReal num);
+    friend ostream& operator << (ostream& out,const BigReal& num);
+//  friend istream& operator >> (istream& out, BigReal num);
+public:
+    BigReal (const double &realNumber = 0.0);
+    BigReal (const string &realNumber);
+    BigReal (const BigDecimalInt &bigInteger);
+    BigReal (const BigReal& other);
+    BigReal& operator= (const BigReal& other);
 
-    private:
-        BigDecimalInt whole;
-        BigDecimalInt fraction;
+    //BigReal (BigReal&& other);
+    //BigReal& operator= (BigReal&& other);
 
+
+    //BigReal operator+ (BigReal& other);
+    //BigReal operator- (BigReal& other);
+    bool operator< (const BigReal& anotherReal)const;
+    bool operator> (const BigReal& anotherReal)const;
+    bool operator== (const BigReal& anotherReal)const;
+
+    int size();
+    char sign();
+
+
+private:
+    BigDecimalInt whole;
+    string fraction;
+
+    static void matchSize(string& LHS,string& RHS);
+    static string extractFraction(string number);
 };
 
 
