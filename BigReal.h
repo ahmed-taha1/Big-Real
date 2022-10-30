@@ -1,8 +1,13 @@
-#include <bits\stdc++.h>
-#include "BigDecimalInt.h"
-#include "BigDecimalInt.cpp"
+//
+// Created by bjabo on 10/30/2022.
+//
+
+#ifndef BIGREAL_BIGREAL_H
+#define BIGREAL_BIGREAL_H
 
 using namespace std;
+#include <bits/stdc++.h>
+#include "BigDecimalInt.h"
 
 class BigReal{
     public:
@@ -11,18 +16,22 @@ class BigReal{
         BigReal (BigDecimalInt bigInteger);
         BigReal (const BigReal& other);
         BigReal& operator= (BigReal& other);
-        BigReal& operator= (BigReal&& other); 
-        BigReal operator+ (BigReal& other);
-        BigReal operator- (BigReal& other);
-        bool operator< (BigReal anotherReal);
-        bool operator> (BigReal anotherReal);
-        bool operator== (BigReal anotherReal);
+//        BigReal& operator= (BigReal&& other);
+//        BigReal operator+ (BigReal& other);
+//        BigReal operator- (BigReal& other);
+//        bool operator< (BigReal anotherReal);
+//        bool operator> (BigReal anotherReal);
+//        bool operator== (BigReal anotherReal);
         int size();
-        int sign();
+        char sign();
         friend ostream& operator << (ostream& out, BigReal num);
-        friend istream& operator >> (istream& out, BigReal num);
+//        friend istream& operator >> (istream& out, BigReal num);
 
     private:
-        BigDecimalInt whole, fraction;
+        BigDecimalInt whole;
+        BigDecimalInt fraction;
 
 };
+
+
+#endif //BIGREAL_BIGREAL_H

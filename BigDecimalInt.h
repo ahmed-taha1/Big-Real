@@ -1,4 +1,11 @@
-//#include <bits/stdc++.h>
+//
+// Created by bjabo on 10/30/2022.
+//
+
+#ifndef BIGREAL_BIGDECIMALINT_H
+#define BIGREAL_BIGDECIMALINT_H
+
+#include <bits/stdc++.h>
 #include <iostream>
 #include <deque>
 using namespace std;
@@ -12,13 +19,13 @@ class BigDecimalInt {
 public:
 
     // constructors
-    BigDecimalInt(const string& num);
-    BigDecimalInt(const int& num=0);
-    BigDecimalInt(const BigDecimalInt& num);
+    BigDecimalInt (const string& num);
+    BigDecimalInt (const int& num=0);
+    BigDecimalInt (const BigDecimalInt& num);
 
     // getter functions
-    int getSize()const;
-    char getSign()const;
+    int getSize() const;
+    char getSign() const;
 
     // operator overloading functions
     BigDecimalInt& operator=(const BigDecimalInt& num);
@@ -36,3 +43,6 @@ private:
     void validate(const string &num); // helper /utility function
     void matchSize(BigDecimalInt& LHS,BigDecimalInt& RHS)const;// helper /utility function
 };
+
+
+#endif //BIGREAL_BIGDECIMALINT_H

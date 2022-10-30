@@ -1,8 +1,10 @@
-#include "BigDecimalInt.cpp"
-#include <bits\stdc++.h>
+#include <bits/stdc++.h>
+#include "BigReal.h"
+#include "BigDecimalInt.h"
 using namespace std;
 
-int main(){
-    BigDecimalInt h1("000000001"), h2("2");
-    cout << h1 - h2 << '\n' ;
+int main() {
+    BigReal h("12.7600");
+    cout << h;
+    return 0;
 }
