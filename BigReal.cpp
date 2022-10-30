@@ -46,7 +46,7 @@ BigReal& BigReal::operator = (const BigReal& other){
 
 // **************************
 int BigReal::size(){
-    return fraction.size() + whole.size();  /////// KOSMEK anty kaman
+    return fraction.size() + whole.getSize();  /////// KOSMEK anty kaman
 }
 
 
@@ -57,15 +57,19 @@ char BigReal::sign(){
 
 
 // **************************
-//bool operator< (BigReal anotherReal){
-//    if()
-//}
-
 ostream& operator << ( ostream& out,const BigReal& num){
     out<<num.whole;
     out<<"." ;
     out<< num.fraction;
     return  out;
+}
+
+
+istream& operator >> (istream& in,BigReal& num){
+    string str;
+    in >> str;
+    num = BigReal(str);
+    return in;
 }
 
 
