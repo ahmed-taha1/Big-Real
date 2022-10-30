@@ -1,68 +1,53 @@
 #include "BigReal.h"
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
+#include <iostream>
+#include <regex>
 using namespace std;
 
-string extractFraction(string str){
-    str = str.substr(str.find('.')+1, str.size());
-    bool found = false;
-    long long i = str.size() - 1;
-    for(; i >= 0; i--)
-        if(str[i] == '0')
-            found = true;
-        else
-            break;
-    if(found)
-        str.erase( i  + 1, str.size());
-    return str;
+
+
+// **********************************************************************
+BigReal::BigReal (const string &realNumber){ // 12412+12412
+    string wholePart = realNumber.substr(0, realNumber.find('.'));
+    this->fraction = extractFraction(realNumber);
+    this->whole = BigDecimalInt(wholePart);
 }
 
- BigReal::BigReal(double realNumber){
-     int n = realNumber;
-     BigDecimalInt wh(n);
-     whole = wh;
-     realNumber-=int(realNumber);
-     string str = to_string(realNumber);
-     str = extractFraction(str);
-     BigDecimalInt fra(str);
-     fraction = fra;
- }
+// **************************************************************************
 
+BigReal::BigReal(const double& realNumber){
+    string number = to_string(realNumber);
+    // (*this) = BigReal(number);    ///////////////////////////////// KOSMEK
+    this->whole = BigReal(number).whole;
+    this->fraction = BigReal(number).fraction;
+}
 
-// *************************
- BigReal::BigReal (string realNumber){
-     string wholeStr = realNumber.substr(0, realNumber.find('.'));
-     string fractionStr = extractFraction(realNumber);
-     BigDecimalInt wh(wholeStr), fra(fractionStr);
-     whole = wh;
-     fraction = fra;
+// // **************************
+BigReal::BigReal (const BigDecimalInt& bigInteger){
+    this->whole = bigInteger;
+    this->fraction = "0";
 }
 
 
 // // **************************
- BigReal::BigReal (BigDecimalInt bigInteger){
-     whole = bigInteger;
+BigReal::BigReal (const BigReal& other){
+    this->whole = other.whole;
+    this->fraction = other.fraction;
 }
 
 
-// // **************************
- BigReal::BigReal (const BigReal& other){
-     this->whole = other.whole;
-     this->fraction = other.fraction;
+// **************************
+BigReal& BigReal::operator = (const BigReal& other){
+    this->whole = other.whole;
+    this->fraction = other.fraction;
+    return *this;
 }
-
-
-// // **************************
- BigReal& BigReal::operator= (BigReal& other){
-     this->whole = other.whole;
-     this->fraction = other.fraction;
-     return *this;
- }
 
 
 // **************************
 int BigReal::size(){
-     return fraction.getSize() + whole.getSize();
- }
+    return fraction.size() + whole.size();  /////// KOSMEK anty kaman
+}
 
 
 // **************************
@@ -76,7 +61,75 @@ char BigReal::sign(){
 //    if()
 //}
 
-ostream& operator << (ostream& out, BigReal num){
-    out << num.whole << "." << num.fraction;
+ostream& operator << ( ostream& out,const BigReal& num){
+    out<<num.whole;
+    out<<"." ;
+    out<< num.fraction;
     return  out;
+}
+
+
+
+bool BigReal::operator==(const BigReal& anotherReal)const {
+    string leftFraction = this->fraction;
+    string rightFraction= anotherReal.fraction;
+    matchSize(leftFraction,rightFraction);
+    return ((this->whole==anotherReal.whole)&&(leftFraction==rightFraction));
+}
+
+
+bool BigReal::operator<(const BigReal& anotherReal)const{
+    if(this->whole==anotherReal.whole){
+        return (this->fraction<anotherReal.fraction);
+    }
+    else
+        return (this->whole<anotherReal.whole);
+}
+
+bool BigReal::operator>(const BigReal &anotherReal) const {
+    if(this->whole==anotherReal.whole){
+        return (this->fraction>anotherReal.fraction);
+    }
+    else
+        return (this->whole>anotherReal.whole);
+}
+
+
+
+string BigReal::extractFraction(string number){
+
+    number = number.substr(number.find('.')+1, number.size());
+
+    if (! regex_match(number, regex("\\d+") ) ){
+        return "0";
+    }
+
+    bool found = false;
+    long long i = number.size() - 1;
+    for(; i >= 0; i--){
+        if(number[i] == '0')
+            found = true;
+        else
+            break;
+    }
+
+    if(found)
+        number.erase(i + 1, number.size());
+    if(number.empty())
+        number = "0";
+    return number;
+}
+
+
+void BigReal::matchSize(string &LHS, string &RHS){
+    long long diff = abs((long long)LHS.size()-(long long)RHS.size());
+    for(long long i = 0; i < diff; i++){
+        // add trailing zeros to the shorter number to facilitate operations
+        if(RHS.size() > LHS.size()){
+            LHS.push_back('0');
+        }
+        else{
+            RHS.push_back('0');
+        }
+    }
 }
