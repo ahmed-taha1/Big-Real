@@ -12,7 +12,7 @@ using namespace std;
 
 class BigReal{
     friend ostream& operator << (ostream& out,const BigReal& num);
-    friend istream& operator >> (istream& out, BigReal& num);
+    friend istream& operator >> (istream& in, BigReal& num);
 public:
     BigReal (const double &realNumber = 0.0);
     BigReal (const string &realNumber);
