@@ -45,17 +45,15 @@ BigReal& BigReal::operator = (const BigReal& other){
 
 
 //***********************************************************************************************************
-int BigReal::size(){
+int BigReal::size()const{
     return fraction.size() + whole.size();  /////// KOSMEK anty kaman
 }
 
 
 //***********************************************************************************************************
-char BigReal::sign(){
+char BigReal::sign()const{
     return whole.getSign();
 }
-
-
 
 
 //***********************************************************************************************************
@@ -64,6 +62,52 @@ bool BigReal::operator==(const BigReal& anotherReal)const {
     string rightFraction= anotherReal.fraction;
     matchFractionSize(leftFraction, rightFraction);
     return ((this->whole==anotherReal.whole)&&(leftFraction==rightFraction));
+}
+
+
+//***********************************************************************************************************
+BigReal BigReal::operator+(const BigReal& other)const{
+    if(this->sign() !=other.sign()){
+        /// call minus
+    }
+
+    // fraction part addition
+    string LHS = this->fraction;
+    string RHS = other.fraction;
+
+    cout<<"LHS"<<this->fraction<<"||"<<"RHS"<<other.fraction<<'\n';
+    matchFractionSize(LHS,RHS);
+
+    string fractionResult;
+    fractionResult.resize(LHS.size());
+    int fractionCarry = 0 ;
+
+    for (int i = LHS.size() - 1; i >= 0 ; --i) {
+        int lhsDigit = LHS[i] - '0';
+        int rhsDigit = RHS[i] - '0';
+        int sum = lhsDigit + rhsDigit + fractionCarry;
+
+        // if the sum of two digits will make overflow("greater than 9") we add fractionCarry to the next digit's sum
+        if(sum>9) {
+            fractionCarry = 1;
+            sum%=10;
+        }
+        else{
+            fractionCarry = 0;
+        }
+        fractionResult[i] = sum+'0';
+    }
+
+    // whole part addition
+    BigDecimalInt wholeResult  = this->whole + other.whole;
+
+    if(fractionCarry){
+        wholeResult = wholeResult+1;
+    }
+    BigReal result;
+    result.whole = wholeResult;
+    result.fraction = fractionResult;
+    return result;
 }
 
 //***********************************************************************************************************
@@ -158,3 +202,4 @@ void BigReal::matchFractionSize(string &LHS, string &RHS){
         }
     }
 }
+
