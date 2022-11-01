@@ -8,16 +8,16 @@ using namespace std;
 
 // **********************************************************************
 BigReal::BigReal (const string &realNumber){ // 12412+12412
-    string wholePart = realNumber.substr(0, realNumber.find('.'));
-    this->fraction = extractFraction(realNumber);
-    this->whole = BigDecimalInt(wholePart);
+    /// find (.)-> 120481390513875981327 if there is no '.'
+    extractWhole(realNumber);
+    extractFraction(realNumber);
 }
 
 // **************************************************************************
 
 BigReal::BigReal(const double& realNumber){
     string number = to_string(realNumber);
-    // (*this) = BigReal(number);    ///////////////////////////////// KOSMEK
+    /// (*this) = BigReal(number);       //////////////////////////////// KOSMEK
     this->whole = BigReal(number).whole;
     this->fraction = BigReal(number).fraction;
 }
@@ -46,7 +46,7 @@ BigReal& BigReal::operator = (const BigReal& other){
 
 // **************************
 int BigReal::size(){
-    return fraction.size() + whole.getSize();  /////// KOSMEK anty kaman
+    return fraction.size() + whole.size();  /////// KOSMEK anty kaman
 }
 
 
@@ -77,7 +77,7 @@ istream& operator >> (istream& in,BigReal& num){
 bool BigReal::operator==(const BigReal& anotherReal)const {
     string leftFraction = this->fraction;
     string rightFraction= anotherReal.fraction;
-    matchSize(leftFraction,rightFraction);
+    matchFractionSize(leftFraction, rightFraction);
     return ((this->whole==anotherReal.whole)&&(leftFraction==rightFraction));
 }
 
@@ -100,32 +100,48 @@ bool BigReal::operator>(const BigReal &anotherReal) const {
 
 
 
-string BigReal::extractFraction(string number){
-
-    number = number.substr(number.find('.')+1, number.size());
-
-    if (! regex_match(number, regex("\\d+") ) ){
-        return "0";
+void BigReal::extractFraction(const string &number){
+    int pointIdx = -1;
+    string fractionPart;
+    for (int i = 0; i <number.size(); ++i) {
+        if (number[i] == '.'){
+            pointIdx = i;
+        }
+        else if (pointIdx != -1){  // found the decimal point
+            fractionPart+=number[i];
+        }
     }
 
-    bool found = false;
-    long long i = number.size() - 1;
-    for(; i >= 0; i--){
-        if(number[i] == '0')
-            found = true;
-        else
+    if(pointIdx==-1 || fractionPart.empty() ||! regex_match(fractionPart, regex("\\d+") ) ){
+        this->fraction ="0";
+        return;
+    }
+
+    // remove trailing zeros
+    for (int i = fractionPart.size()-1; i>=0 ; --i){
+        if(fractionPart[i]!='0'){
             break;
+        }
+        fractionPart.erase(i,1);
     }
 
-    if(found)
-        number.erase(i + 1, number.size());
-    if(number.empty())
-        number = "0";
-    return number;
+    if(fractionPart.empty())
+        this->fraction = "0";
+    else
+        this->fraction = fractionPart;
 }
 
+void BigReal::extractWhole(const string &number) {
+    string wholePart ;
+    for (const char& i : number) {
+        if(i=='.')
+            break;
+        wholePart+=i;
+    }
+    this->whole = BigDecimalInt(wholePart);
+}
 
-void BigReal::matchSize(string &LHS, string &RHS){
+void BigReal::matchFractionSize(string &LHS, string &RHS){
     long long diff = abs((long long)LHS.size()-(long long)RHS.size());
     for(long long i = 0; i < diff; i++){
         // add trailing zeros to the shorter number to facilitate operations
