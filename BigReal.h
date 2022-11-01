@@ -24,14 +24,14 @@ public:
     //BigReal& operator= (BigReal&& other);
 
 
-    //BigReal operator+ (BigReal& other);
-    //BigReal operator- (BigReal& other);
+    BigReal operator+ (const BigReal& other)const;
+    //BigReal operator- (BigReal& other)const;
     bool operator< (const BigReal& anotherReal)const;
     bool operator> (const BigReal& anotherReal)const;
     bool operator== (const BigReal& anotherReal)const;
 
-    int size();
-    char sign();
+    int size()const;
+    char sign()const;
 
 
 private:
