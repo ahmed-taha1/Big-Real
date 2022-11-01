@@ -8,6 +8,7 @@
 //#include <bits/stdc++.h>
 #include <iostream>
 #include "BigDecimalInt.h"
+
 using namespace std;
 
 class BigReal{
@@ -19,7 +20,6 @@ public:
     BigReal (const BigDecimalInt &bigInteger);
     BigReal (const BigReal& other);
     BigReal& operator= (const BigReal& other);
-
     //BigReal (BigReal&& other);
     //BigReal& operator= (BigReal&& other);
 
@@ -38,8 +38,9 @@ private:
     BigDecimalInt whole;
     string fraction;
 
-    static void matchSize(string& LHS,string& RHS);
-    static string extractFraction(string number);
+    static void matchFractionSize(string& LHS, string& RHS);
+    void setFraction(const string &number);
+    void setWhole(const string &number);
 };
 
 
