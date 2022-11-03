@@ -295,7 +295,6 @@ ostream& operator<<(ostream& out,const BigDecimalInt& bigint) {
     return out;
 }
 
-
 // ****************************** Validating number **************************************************
 void BigDecimalInt::validate(const string &num){
     bool valid = true;
