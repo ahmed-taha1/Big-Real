@@ -1,48 +1,46 @@
 //
-// Created by bjabo on 10/30/2022.
+// Created by Ismail Magdy on 04/11/2022.
 //
 
-#ifndef BIGREAL_BIGDECIMALINT_H
-#define BIGREAL_BIGDECIMALINT_H
+#ifndef ASS_2_BIGREAL_H
+#define ASS_2_BIGREAL_H
 
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 #include <iostream>
-#include <deque>
+#include "BigDecimalInt.h"
+
 using namespace std;
 
-
-class BigDecimalInt {
-
-    // cout operator overloading function
-    friend ostream& operator<<(ostream& out,const BigDecimalInt& bigint);
-
+class BigReal{
+    friend ostream& operator << (ostream& out,const BigReal& num);
+    friend istream& operator >> (istream& in, BigReal& num);
 public:
+    BigReal (const double &realNumber = 0.0);
+    BigReal (const string &realNumber);
+    BigReal (const BigDecimalInt &bigInteger);
+    BigReal (const BigReal& other);
+    BigReal& operator= (const BigReal& other);
+    //BigReal (BigReal&& other);
+    //BigReal& operator= (BigReal&& other);
 
-    // constructors
-    BigDecimalInt (const string& num);
-    BigDecimalInt (const int& num=0);
-    BigDecimalInt (const BigDecimalInt& num);
+    void setSign(const char& sing);
 
-    // getter functions
-    int getSize() const;
-    char getSign() const;
+    BigReal operator+ (const BigReal& other)const;
+    BigReal operator- (const BigReal& other)const;
+    bool operator< (const BigReal& anotherReal)const;
+    bool operator> (const BigReal& anotherReal)const;
+    bool operator== (const BigReal& anotherReal)const;
 
-    // operator overloading functions
-    BigDecimalInt& operator=(const BigDecimalInt& num);
-    BigDecimalInt operator+(const BigDecimalInt& num)const;
-    BigDecimalInt operator-(const BigDecimalInt& num)const;
-    bool operator< (const BigDecimalInt& anotherDec)const;
-    bool operator> (const BigDecimalInt& anotherDec)const;
-    bool operator==(const BigDecimalInt& anotherDec)const;
+    int size()const;
+    char sign()const;
 
 private:
-    deque<char> digits; // for storing digits from the string
-    char sign;  // to store the sign
+    BigDecimalInt whole;
+    string fraction;
 
-    void setSign(const char &sign);
-    void validate(const string &num); // helper /utility function
-    void matchSize(BigDecimalInt& LHS,BigDecimalInt& RHS)const;// helper /utility function
+    static void matchFractionSize(string& LHS, string& RHS);
+    void setFraction(const string &number);
+    void setWhole(const string &number);
 };
 
-
-#endif //BIGREAL_BIGDECIMALINT_H
+#endif //ASS_2_BIGREAL_H
