@@ -116,10 +116,37 @@ BigReal BigReal::operator-(const BigReal& other) const {
         return *this+temp;
     }
 
+    BigReal LHS,RHS;
+
+    RHS = *this;
+    char smallerSign = this->sign(); // save old sign
+    RHS.setSign('+');
+
+    LHS = other;
+    if(LHS.sign()=='+') // flip sign (1 - +6) == (1 - 6)
+        LHS.setSign('-');
+    else
+        LHS.setSign('+'); // (1 - -6) == (1 + 6)
+
+    char biggerSign = LHS.sign(); // save old sign
+    LHS.setSign('+'); // get abs value
+
     BigReal result ;
 
-    BigReal bigger =  max(*this,other);
-    BigReal smaller = min(*this,other);
+    if(RHS > LHS) { // assign the bigger and the smaller value and the result's sign
+        result.setSign(smallerSign);
+        swap(RHS,LHS);
+    }
+    else if(LHS > RHS) { // assign the bigger and the smaller value and the result's sign
+        result.setSign(biggerSign);
+    }
+    else { // if they are equal return 0 (50 - 50) = 0
+        result.setSign('+');
+        return BigDecimalInt("0");
+    }
+
+    BigReal bigger =  max(LHS,RHS);
+    BigReal smaller = min(LHS,RHS);
 
     string biggerFraction = bigger.fraction;
     string smallerFraction = smaller.fraction;
@@ -129,7 +156,6 @@ BigReal BigReal::operator-(const BigReal& other) const {
         biggerFraction[0]+=10;
     }
     matchFractionSize(biggerFraction,smallerFraction);
-
     result.fraction.resize(biggerFraction.size());
 
     for (int i = result.fraction.size() - 1 ; i >= 0; i--) {
@@ -146,30 +172,56 @@ BigReal BigReal::operator-(const BigReal& other) const {
 
 //***********************************************************************************************************
 bool BigReal::operator<(const BigReal& anotherReal)const{
+
+    if(this->sign()=='-'&&anotherReal.sign()=='+')
+        return true;
+    // if the first number have a positive sign and the second number have negative sign function will return false
+    if(this->sign()=='+'&&anotherReal.sign()=='-')
+        return false;
+
+    
+    string LHSFraction = this->fraction;
+    string RHSFraction = anotherReal.fraction;
+    matchFractionSize(LHSFraction,RHSFraction);
+    
     if(this->whole==anotherReal.whole){
-        return (this->fraction<anotherReal.fraction);
+        if(this->sign()=='-')
+            return (LHSFraction > RHSFraction);
+        else
+            return (LHSFraction < RHSFraction);
     }
-    else
+    else{
         return (this->whole<anotherReal.whole);
+    }
 }
 
-
 //***********************************************************************************************************
-bool BigReal::operator>(const BigReal &anotherReal) const {
+bool BigReal::operator>(const BigReal &anotherReal)const{
+    if(this->sign()=='-'&&anotherReal.sign()=='+')
+        return false;
+    // if the first number have a positive sign and the second number have negative sign function will return false
+    if(this->sign()=='+'&&anotherReal.sign()=='-')
+        return true;
+
+    string LHSFraction = this->fraction;
+    string RHSFraction = anotherReal.fraction;
+    matchFractionSize(LHSFraction,RHSFraction);
+    
     if(this->whole==anotherReal.whole){
-        return (this->fraction>anotherReal.fraction);
+        if(this->sign()=='-')
+            return (LHSFraction < RHSFraction);
+        else
+            return (LHSFraction > RHSFraction);
     }
     else
         return (this->whole>anotherReal.whole);
 }
-
 
 //***********************************************************************************************************
 ostream& operator << ( ostream& out,const BigReal& num){
     out<<num.whole<<"." << num.fraction;
     return  out;
 }
-
 
 //***********************************************************************************************************
 istream& operator >> (istream& in,BigReal& num){
@@ -178,7 +230,6 @@ istream& operator >> (istream& in,BigReal& num){
     num = BigReal(str);
     return in;
 }
-
 
 //***********************************************************************************************************
 void BigReal::setFraction(const string &number){
@@ -236,6 +287,4 @@ void BigReal::matchFractionSize(string &LHS, string &RHS){
         }
     }
 }
-
-
 //***********************************************************************************************************
