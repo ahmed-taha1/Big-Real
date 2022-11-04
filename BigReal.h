@@ -1,9 +1,9 @@
 //
-// Created by bjabo on 10/30/2022.
+// Created by Ismail Magdy on 04/11/2022.
 //
 
-#ifndef BIGREAL_BIGREAL_H
-#define BIGREAL_BIGREAL_H
+#ifndef ASS_2_BIGREAL_H
+#define ASS_2_BIGREAL_H
 
 //#include <bits/stdc++.h>
 #include <iostream>
@@ -23,16 +23,16 @@ public:
     //BigReal (BigReal&& other);
     //BigReal& operator= (BigReal&& other);
 
+    void setSign(const char& sing);
 
     BigReal operator+ (const BigReal& other)const;
-    //BigReal operator- (BigReal& other)const;
+    BigReal operator- (const BigReal& other)const;
     bool operator< (const BigReal& anotherReal)const;
     bool operator> (const BigReal& anotherReal)const;
     bool operator== (const BigReal& anotherReal)const;
 
     int size()const;
     char sign()const;
-
 
 private:
     BigDecimalInt whole;
@@ -43,5 +43,4 @@ private:
     void setWhole(const string &number);
 };
 
-
-#endif //BIGREAL_BIGREAL_H
+#endif //ASS_2_BIGREAL_H
