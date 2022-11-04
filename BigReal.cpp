@@ -7,19 +7,15 @@ using namespace std;
 
 
 //***********************************************************************************************************
-BigReal::BigReal (const string &realNumber){ // 12412+12412
-    /// find (.)-> 120481390513875981327 if there is no '.'
+BigReal::BigReal (const string &realNumber){
     setWhole(realNumber);
     setFraction(realNumber);
 }
 
-
 //***********************************************************************************************************
 BigReal::BigReal(const double& realNumber){
     string number = to_string(realNumber);
-    /// (*this) = BigReal(number);       //////////////////////////////// KOSMEK
-    this->whole = BigReal(number).whole;
-    this->fraction = BigReal(number).fraction;
+    *this = BigReal(number);
 }
 
 //***********************************************************************************************************
@@ -35,7 +31,6 @@ BigReal::BigReal (const BigReal& other){
     this->fraction = other.fraction;
 }
 
-
 //***********************************************************************************************************
 BigReal& BigReal::operator = (const BigReal& other){
     this->whole = other.whole;
@@ -43,39 +38,41 @@ BigReal& BigReal::operator = (const BigReal& other){
     return *this;
 }
 
-
 //***********************************************************************************************************
 int BigReal::size()const{
     return fraction.size() + whole.size();  /////// KOSMEK anty kaman
 }
-
 
 //***********************************************************************************************************
 char BigReal::sign()const{
     return whole.getSign();
 }
 
+void BigReal::setSign(const char &sign) {
+    whole.setSign(sign);
+}
 
 //***********************************************************************************************************
 bool BigReal::operator==(const BigReal& anotherReal)const {
     string leftFraction = this->fraction;
     string rightFraction= anotherReal.fraction;
-    matchFractionSize(leftFraction, rightFraction);
+    matchFractionSize(leftFraction, rightFraction); // 13.3500
     return ((this->whole==anotherReal.whole)&&(leftFraction==rightFraction));
 }
 
-
 //***********************************************************************************************************
 BigReal BigReal::operator+(const BigReal& other)const{
-    if(this->sign() !=other.sign()){
-        /// call minus
+
+    if(this->sign() != other.sign()){
+        BigReal temp(other);
+        temp.whole.setSign(this->sign());
+        return *this-temp;
     }
 
     // fraction part addition
     string LHS = this->fraction;
     string RHS = other.fraction;
 
-    cout<<"LHS"<<this->fraction<<"||"<<"RHS"<<other.fraction<<'\n';
     matchFractionSize(LHS,RHS);
 
     string fractionResult;
@@ -97,16 +94,53 @@ BigReal BigReal::operator+(const BigReal& other)const{
         }
         fractionResult[i] = sum+'0';
     }
-
     // whole part addition
     BigDecimalInt wholeResult  = this->whole + other.whole;
 
-    if(fractionCarry){
-        wholeResult = wholeResult+1;
-    }
+    wholeResult = wholeResult+fractionCarry;
+
     BigReal result;
     result.whole = wholeResult;
     result.fraction = fractionResult;
+    result.setSign(this->sign());
+
+    return result;
+}
+
+
+//***********************************************************************************************************
+BigReal BigReal::operator-(const BigReal& other) const {
+    if(this->sign() != other.sign()) {
+        BigReal temp(other);
+        temp.whole.setSign(this->sign());
+        return *this+temp;
+    }
+
+    BigReal result ;
+
+    BigReal bigger =  max(*this,other);
+    BigReal smaller = min(*this,other);
+
+    string biggerFraction = bigger.fraction;
+    string smallerFraction = smaller.fraction;
+
+    if(smallerFraction>biggerFraction){
+        bigger = bigger - 1;
+        biggerFraction[0]+=10;
+    }
+    matchFractionSize(biggerFraction,smallerFraction);
+
+    result.fraction.resize(biggerFraction.size());
+
+    for (int i = result.fraction.size() - 1 ; i >= 0; i--) {
+        if(biggerFraction[i] < smallerFraction[i]) {
+            biggerFraction[i-1]--;
+            biggerFraction[i] += 10;
+        }
+        result.fraction[i] = biggerFraction[i]-smallerFraction[i]+'0';
+    }
+    result.whole = bigger.whole-smaller.whole;
+    result.setSign(bigger.sign());
     return result;
 }
 
@@ -151,7 +185,7 @@ void BigReal::setFraction(const string &number){
     int pointIdx = -1;
     string fractionPart;
     for (int i = 0; i <number.size(); ++i) {
-        if (number[i] == '.'){
+        if (number[i] == '.' && pointIdx == -1){
             pointIdx = i;
         }
         else if (pointIdx != -1){  // found the decimal point
@@ -159,7 +193,7 @@ void BigReal::setFraction(const string &number){
         }
     }
 
-    if(pointIdx==-1 || fractionPart.empty() ||! regex_match(fractionPart, regex("\\d+") ) ){
+    if(pointIdx==-1 || fractionPart.empty() || !regex_match(fractionPart, regex("\\d+") ) ){
         this->fraction ="0";
         return;
     }
@@ -203,3 +237,5 @@ void BigReal::matchFractionSize(string &LHS, string &RHS){
     }
 }
 
+
+//***********************************************************************************************************
