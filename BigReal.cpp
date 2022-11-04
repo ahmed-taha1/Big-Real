@@ -116,37 +116,40 @@ BigReal BigReal::operator-(const BigReal& other) const {
         return *this+temp;
     }
 
-    BigReal LHS,RHS;
+    BigReal bigger,smaller,result;
 
-    RHS = *this;
+    result.whole = bigger.whole-smaller.whole;
+
+    bigger.setSign('+');
+
+    smaller = *this;
     char smallerSign = this->sign(); // save old sign
-    RHS.setSign('+');
+    smaller.setSign('+');
 
-    LHS = other;
-    if(LHS.sign()=='+') // flip sign (1 - +6) == (1 - 6)
-        LHS.setSign('-');
-    else
-        LHS.setSign('+'); // (1 - -6) == (1 + 6)
-
-    char biggerSign = LHS.sign(); // save old sign
-    LHS.setSign('+'); // get abs value
-
-    BigReal result ;
-
-    if(RHS > LHS) { // assign the bigger and the smaller value and the result's sign
-        result.setSign(smallerSign);
-        swap(RHS,LHS);
+    bigger = other;
+    if(bigger.sign()=='+') // flip sign (1 - +6) == (1 - 6)
+    {
+        bigger.setSign('-');
     }
-    else if(LHS > RHS) { // assign the bigger and the smaller value and the result's sign
+    else {
+        bigger.setSign('+');
+    } // (1 - -6) == (1 + 6)
+
+    char biggerSign = bigger.sign(); // save old sign
+    bigger.setSign('+'); // get abs value
+
+
+    if(smaller > bigger) { // assign the bigger and the smaller value and the result's sign
+        result.setSign(smallerSign);
+        swap(bigger,smaller);
+    }
+    else if(bigger > smaller) { // assign the bigger and the smaller value and the result's sign
         result.setSign(biggerSign);
     }
     else { // if they are equal return 0 (50 - 50) = 0
         result.setSign('+');
-        return BigDecimalInt("0");
+        return BigReal("0.0");
     }
-
-    BigReal bigger =  max(LHS,RHS);
-    BigReal smaller = min(LHS,RHS);
 
     string biggerFraction = bigger.fraction;
     string smallerFraction = smaller.fraction;
@@ -155,6 +158,7 @@ BigReal BigReal::operator-(const BigReal& other) const {
         bigger = bigger - 1;
         biggerFraction[0]+=10;
     }
+
     matchFractionSize(biggerFraction,smallerFraction);
     result.fraction.resize(biggerFraction.size());
 
@@ -165,8 +169,6 @@ BigReal BigReal::operator-(const BigReal& other) const {
         }
         result.fraction[i] = biggerFraction[i]-smallerFraction[i]+'0';
     }
-    result.whole = bigger.whole-smaller.whole;
-    result.setSign(bigger.sign());
     return result;
 }
 
@@ -179,11 +181,11 @@ bool BigReal::operator<(const BigReal& anotherReal)const{
     if(this->sign()=='+'&&anotherReal.sign()=='-')
         return false;
 
-    
+
     string LHSFraction = this->fraction;
     string RHSFraction = anotherReal.fraction;
     matchFractionSize(LHSFraction,RHSFraction);
-    
+
     if(this->whole==anotherReal.whole){
         if(this->sign()=='-')
             return (LHSFraction > RHSFraction);
@@ -206,7 +208,7 @@ bool BigReal::operator>(const BigReal &anotherReal)const{
     string LHSFraction = this->fraction;
     string RHSFraction = anotherReal.fraction;
     matchFractionSize(LHSFraction,RHSFraction);
-    
+
     if(this->whole==anotherReal.whole){
         if(this->sign()=='-')
             return (LHSFraction < RHSFraction);
