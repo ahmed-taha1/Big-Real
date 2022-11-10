@@ -45,6 +45,9 @@ BigDecimalInt::BigDecimalInt(const long long int &num) {
 
 // ******************************* Assignment "=" Operator  ***************************************
 BigDecimalInt& BigDecimalInt::operator=(const BigDecimalInt &num) {
+    if(this == &num)
+        return *this;
+
     this->digits.clear(); // clear the object
     this->setSign(num.getSign()); // copy the sign
 
@@ -127,12 +130,12 @@ BigDecimalInt BigDecimalInt::operator+(const BigDecimalInt &num)const {
 
 
 // ***************************** Subtraction "-" Operator *****************************************
-BigDecimalInt BigDecimalInt::operator-(const BigDecimalInt &num)const{
+BigDecimalInt BigDecimalInt::operator-(const BigDecimalInt &other)const{
     /* call add operator if they have non equal signs and set their add sign to the first number
        (-3 - 2) = -(3 + 2) || (3 - -6) = (3 + 6)
     */
-    if(this->getSign() != num.getSign()) {
-        BigDecimalInt temp(num);
+    if(this->getSign() != other.getSign()) {
+        BigDecimalInt temp(other);
         temp.setSign(this-> getSign());
         return *this+temp;
     }
@@ -143,11 +146,11 @@ BigDecimalInt BigDecimalInt::operator-(const BigDecimalInt &num)const{
     result.digits.clear();
 
 
-    smaller= *this;
+    smaller = *this;
     char smallerSign = this->getSign(); // save old sign
     smaller.setSign('+');
 
-    bigger = num;
+    bigger = other;
     if(bigger.getSign()=='+') // flip sign (1 - +6) == (1 - 6)
         bigger.setSign('-');
     else
@@ -197,8 +200,6 @@ bool BigDecimalInt::operator< (const BigDecimalInt& anotherDec)const{
     // if the first number have a positive sign and the second number have negative sign function will return false
     if(this->getSign()=='+'&&anotherDec.getSign()=='-')
         return false;
-
-
 
     BigDecimalInt LHS = *this;
     BigDecimalInt RHS = anotherDec;
