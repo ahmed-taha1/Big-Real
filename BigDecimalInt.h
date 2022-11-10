@@ -2,8 +2,8 @@
 // Created by Ismail Magdy on 04/11/2022.
 //
 
-#ifndef ASS_2_BIGDECIMALINT_H
-#define ASS_2_BIGDECIMALINT_H
+#ifndef BIGREAL_BIGDECIMALINT_H
+#define BIGREAL_BIGDECIMALINT_H
 
 //#include <bits/stdc++.h>
 #include <iostream>
@@ -33,7 +33,7 @@ public:
     // operator overloading functions
     BigDecimalInt& operator=(const BigDecimalInt& num);
     BigDecimalInt operator+(const BigDecimalInt& num)const;
-    BigDecimalInt operator-(const BigDecimalInt& num)const;
+    BigDecimalInt operator-(const BigDecimalInt& other)const;
     bool operator< (const BigDecimalInt& anotherDec)const;
     bool operator> (const BigDecimalInt& anotherDec)const;
 
