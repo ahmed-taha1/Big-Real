@@ -31,8 +31,25 @@ BigReal::BigReal (const BigReal& other){
     this->fraction = other.fraction;
 }
 
+
+BigReal::BigReal(const BigReal &&other) {
+    this->whole = other.whole;
+    this->fraction = other.fraction;
+}
+
+//***********************************************************************************************************
+BigReal &BigReal::operator=(const BigReal&& other) {
+    if(this == &other)
+        return *this;
+    this->whole = other.whole;
+    this->fraction = other.fraction;
+    return *this;
+}
+
 //***********************************************************************************************************
 BigReal& BigReal::operator = (const BigReal& other){
+    if(this == &other)
+        return *this;
     this->whole = other.whole;
     this->fraction = other.fraction;
     return *this;
@@ -51,6 +68,7 @@ char BigReal::sign()const{
 void BigReal::setSign(const char &sign) {
     whole.setSign(sign);
 }
+
 
 //***********************************************************************************************************
 bool BigReal::operator==(const BigReal& anotherReal)const {
@@ -106,7 +124,6 @@ BigReal BigReal::operator+(const BigReal& other)const{
 
     return result;
 }
-
 
 //***********************************************************************************************************
 BigReal BigReal::operator-(const BigReal& other) const {
@@ -184,7 +201,7 @@ bool BigReal::operator<(const BigReal& anotherReal)const{
 
     string LHSFraction = this->fraction;
     string RHSFraction = anotherReal.fraction;
-    matchFractionSize(LHSFraction,RHSFraction);
+    matchFractionSize(LHSFraction,RHSFraction); // add zeros to the right
 
     if(this->whole==anotherReal.whole){
         if(this->sign()=='-')
