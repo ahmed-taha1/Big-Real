@@ -2,8 +2,8 @@
 // Created by Ismail Magdy on 04/11/2022.
 //
 
-#ifndef ASS_2_BIGREAL_H
-#define ASS_2_BIGREAL_H
+#ifndef BIGREAL_BIGREAL_H
+#define BIGREAL_BIGREAL_H
 
 //#include <bits/stdc++.h>
 #include <iostream>
@@ -20,8 +20,8 @@ public:
     BigReal (const BigDecimalInt &bigInteger);
     BigReal (const BigReal& other);
     BigReal& operator= (const BigReal& other);
-    //BigReal (BigReal&& other);
-    //BigReal& operator= (BigReal&& other);
+    BigReal (const BigReal&& other);
+    BigReal& operator= (const BigReal&& other);
 
     void setSign(const char& sing);
 
