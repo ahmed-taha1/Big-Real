@@ -1,4 +1,7 @@
-//#include <bits/stdc++.h>
+//
+// Created by bjabo on 11/14/2022.
+//
+
 #include "BigDecimalInt.h"
 #include <regex>
 using namespace std;
@@ -23,7 +26,7 @@ BigDecimalInt::BigDecimalInt(const BigDecimalInt &other) {
 }
 
 // ******************************** Int Constructor **************************************
-BigDecimalInt::BigDecimalInt(const long long int &num) {
+BigDecimalInt::BigDecimalInt(long long num) {
     int temp=num;
     if(num==0) {
         digits.push_back('0');
@@ -73,9 +76,9 @@ char BigDecimalInt::getSign() const {
 
 
 // ******************************** Sign Setter Function ************************************************
-void BigDecimalInt::setSign(const char& sign) {
-    if(!isdigit(sign)) {
-        this->sign = sign;
+void BigDecimalInt::setSign(char Sign) {
+    if(!isdigit(Sign)) {
+        this->sign = Sign;
     }
     else
         this->sign = '+';
