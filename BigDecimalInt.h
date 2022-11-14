@@ -1,11 +1,11 @@
 //
-// Created by Ismail Magdy on 04/11/2022.
+// Created by bjabo on 11/14/2022.
 //
 
 #ifndef BIGREAL_BIGDECIMALINT_H
 #define BIGREAL_BIGDECIMALINT_H
 
-//#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <iostream>
 #include <deque>
 using namespace std;
@@ -20,7 +20,7 @@ public:
 
     // constructors
     BigDecimalInt(const string& num);
-    BigDecimalInt(const long long int &num=0);
+    BigDecimalInt(long long num=0);
     BigDecimalInt(const BigDecimalInt& num);
 
     // getter functions
@@ -28,7 +28,7 @@ public:
     char getSign()const;
 
     // setter
-    void setSign(const char &sign);
+    void setSign(char sign);
 
     // operator overloading functions
     BigDecimalInt& operator=(const BigDecimalInt& num);
@@ -45,4 +45,4 @@ private:
     void validate(const string &num); // helper /utility function
     static void matchSize(BigDecimalInt& LHS,BigDecimalInt& RHS);// helper /utility function
 };
-#endif //ASS_2_BIGDECIMALINT_H
+#endif //BIGREAL_BIGDECIMALINT_H
