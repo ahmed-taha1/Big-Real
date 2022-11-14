@@ -1,5 +1,5 @@
 #include "BigReal.h"
-//#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <iostream>
 #include <regex>
 using namespace std;
@@ -13,16 +13,13 @@ BigReal::BigReal (const string &realNumber){
 }
 
 //***********************************************************************************************************
-BigReal::BigReal(const double& realNumber){
+BigReal::BigReal(double realNumber){
     string number = to_string(realNumber);
     *this = BigReal(number);
 }
 
 //***********************************************************************************************************
-BigReal::BigReal (const BigDecimalInt& bigInteger){
-    this->whole = bigInteger;
-    this->fraction = "0";
-}
+BigReal::BigReal (const BigDecimalInt& bigInteger) : whole(bigInteger), fraction("0"){}
 
 
 //***********************************************************************************************************
@@ -65,7 +62,7 @@ char BigReal::sign()const{
     return whole.getSign();
 }
 
-void BigReal::setSign(const char &sign) {
+void BigReal::setSign(char sign) {
     whole.setSign(sign);
 }
 
@@ -135,7 +132,7 @@ BigReal BigReal::operator-(const BigReal& other) const {
 
     BigReal bigger,smaller,result;
 
-    result.whole = bigger.whole-smaller.whole;
+    result.whole = max(this->whole, other.whole) - min(this->whole, other.whole);
 
     bigger.setSign('+');
 
@@ -292,7 +289,6 @@ void BigReal::setWhole(const string &number) {
     }
     this->whole = BigDecimalInt(wholePart);
 }
-
 //***********************************************************************************************************
 void BigReal::matchFractionSize(string &LHS, string &RHS){
     long long diff = abs((long long)LHS.size()-(long long)RHS.size());
