@@ -1,11 +1,11 @@
 //
-// Created by Ismail Magdy on 04/11/2022.
+// Created by bjabo on 11/14/2022.
 //
 
 #ifndef BIGREAL_BIGREAL_H
 #define BIGREAL_BIGREAL_H
 
-//#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <iostream>
 #include "BigDecimalInt.h"
 
@@ -15,7 +15,7 @@ class BigReal{
     friend ostream& operator << (ostream& out,const BigReal& num);
     friend istream& operator >> (istream& in, BigReal& num);
 public:
-    BigReal (const double &realNumber = 0.0);
+    BigReal (double realNumber = 0.0);
     BigReal (const string &realNumber);
     BigReal (const BigDecimalInt &bigInteger);
     BigReal (const BigReal& other);
@@ -23,7 +23,7 @@ public:
     BigReal (const BigReal&& other);
     BigReal& operator= (const BigReal&& other);
 
-    void setSign(const char& sing);
+    void setSign(char sign);
 
     BigReal operator+ (const BigReal& other)const;
     BigReal operator- (const BigReal& other)const;
@@ -43,4 +43,4 @@ private:
     void setWhole(const string &number);
 };
 
-#endif //ASS_2_BIGREAL_H
+#endif //ASS_2_BIGREAL_H //BIGREAL_BIGREAL_H
